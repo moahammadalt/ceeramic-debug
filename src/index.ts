@@ -67,7 +67,7 @@ const providerSeed = CryptoUtils.randomBytes(
 );
 console.log('providerSeed', providerSeed);
 
-const ceramic = new CeramicClient('https://ceramic-clay.3boxlabs.com');
+const ceramic = new CeramicClient('https://clay.ceramic.hypernet.foundation');
 
 const authProvider = new Ed25519Provider(providerSeed);
 
@@ -87,10 +87,10 @@ const createSchemaAndDefinition = async () => {
   console.log('manager', manager.createSchema);
 
   const lazyMintingSignatureID = await manager.createSchema(
-    'LazyMintingSignature1',
+    'LazyMintingSignatureTest',
     {
       $schema: 'http://json-schema.org/draft-07/schema',
-      title: 'LazyMintingSignature1',
+      title: 'LazyMintingSignatureTest',
       type: 'object',
       properties: {
         data: {
@@ -123,9 +123,9 @@ const createSchemaAndDefinition = async () => {
     }
   );
 
-  await manager.createDefinition('LazyMintingSignature1', {
-    name: 'LazyMintingSignature1',
-    description: 'A simple LazyMintingSignature1',
+  await manager.createDefinition('LazyMintingSignatureTest', {
+    name: 'LazyMintingSignatureTest',
+    description: 'A simple LazyMintingSignatureTest',
     schema: manager.getSchemaURL(lazyMintingSignatureID) as string,
   });
 };
@@ -134,12 +134,14 @@ const saveData = async (model: any) => {
   const dataModel = new DataModel({ ceramic, model: model });
   const dataStore = new DIDDataStore({ ceramic, model: dataModel });
 
-  const res = await dataStore.set('LazyMintingSignature1', {
+  const prevData = await dataStore.get('LazyMintingSignatureTest');
+  const res = await dataStore.set('LazyMintingSignatureTest', {
     data: [
+      ...(prevData ? prevData.data : []),
       {
-        registrarAddress: 'registrarAddressdataasdlasmd',
-        mintingSignature: 'mintingSignaturedatasadasd',
-        accountAddress: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+        registrarAddress: 'registrarAddressdataasdlasmdhypernettt',
+        mintingSignature: 'mintingSignaturedatasadasdhypernettt',
+        accountAddress: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266hypernettt',
       },
     ],
   });
@@ -154,10 +156,10 @@ const initialize = async () => {
   await saveData(model);
   /* const model1 = {
     definitions: {
-      LazyMintingSignature1: 'kjzl6cwe1jw147a5aukx01zmfie1o0siwaa43dq5hqju3cdi5qnam1cqf008xr9'
+      LazyMintingSignatureTest: 'kjzl6cwe1jw147a5aukx01zmfie1o0siwaa43dq5hqju3cdi5qnam1cqf008xr9'
     },
     schemas: {
-      LazyMintingSignature1: 'ceramic://k3y52l7qbv1frxoqn6pkell5l0m5zfvpb2ml3vbtdi2gfty79aepmrhnuw3te7lkw'
+      LazyMintingSignatureTest: 'ceramic://k3y52l7qbv1frxoqn6pkell5l0m5zfvpb2ml3vbtdi2gfty79aepmrhnuw3te7lkw'
     },
     tiles: {}
   } */
